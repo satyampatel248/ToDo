@@ -1,2 +1,98 @@
-# ToDo
-Todo list for daily work.
+# Advanced ToDo App
+
+A full-featured **ToDo application** built with **Node.js, Express, MySQL, HTML, CSS, and JavaScript**.  
+
+Features:  
+- User authentication (Signup/Login)  
+- CRUD operations on tasks (Create, Read, Update, Delete)  
+- Edit task title, priority, and due date  
+- Mark tasks as complete/incomplete  
+- Drag-and-drop ordering of tasks  
+- Responsive and modern frontend served via Express  
+- Each user sees only their own tasks  
+
+---
+
+## Folder Structure
+
+ToDo/
+│
+├── backend/
+│   ├── db.js
+│   ├── server.js
+│   └── routes/
+│       ├── tasks.js
+│       └── auth.js
+│
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+│
+├── package.json
+└── README.md
+
+---
+
+## Prerequisites
+
+- Node.js (v18+) & npm  
+- MySQL (running locally)  
+- Chrome or any modern browser  
+
+---
+
+## Setup Instructions
+
+### 1️⃣ Clone the repository
+```bash
+git clone <your-repo-url>
+cd ToDo
+
+2️⃣ Install backend dependencies
+
+npm install express mysql2 body-parser cors bcrypt
+
+On macOS M1/M2, if bcrypt gives build errors, use bcryptjs instead:
+
+
+npm install bcryptjs
+
+3️⃣ Setup MySQL Database
+
+Login to MySQL and run:
+
+CREATE DATABASE IF NOT EXISTS ToDo;
+USE ToDo;
+
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+-- Tasks table
+CREATE TABLE IF NOT EXISTS tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    due_date DATE,
+    priority ENUM('Low','Medium','High') DEFAULT 'Medium',
+    completed TINYINT(1) DEFAULT 0,
+    position INT DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+4️⃣ Configure Database Connection
+
+Edit backend/db.js:
+
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",       // your MySQL username
+  password: "",       // your MySQL password
+  database: "ToDo"
+});
+
