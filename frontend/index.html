@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced ToDo App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <h1>✅ ToDo App</h1>
+
+  <div id="authContainer">
+    <h2>Login / Signup</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="signup()">Signup</button>
+    <p id="authMessage"></p>
+  </div>
+
+  <div id="todoContainer" style="display:none;">
+    <button id="logoutBtn" onclick="logout()">Logout</button>
+    <div class="task-input">
+      <input type="text" id="taskTitle" placeholder="Task title">
+      <input type="date" id="taskDue">
+      <select id="taskPriority">
+        <option value="Low">Low</option>
+        <option value="Medium" selected>Medium</option>
+        <option value="High">High</option>
+      </select>
+      <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <ul id="taskList"></ul>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

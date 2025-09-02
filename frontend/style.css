@@ -1,0 +1,11 @@
+body { font-family: Arial, sans-serif; background:#f4f6f8; margin:0; padding:0; }
+.app { max-width:600px; margin:40px auto; padding:20px; background:white; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+h1,h2{text-align:center;}
+input,select,button{padding:8px;font-size:14px;margin:5px;}
+button{cursor:pointer;border:none;border-radius:5px;}
+#taskList{list-style:none;padding:0;}
+#taskList li{background:#f9f9f9;margin-bottom:10px;padding:10px;border-left:5px solid #28a745;display:flex;justify-content:space-between;align-items:center;border-radius:6px;cursor:grab;}
+#taskList li.completed{text-decoration:line-through;opacity:0.6;}
+.task-input{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:15px;}
+#logoutBtn{background:#dc3545;color:white;margin-bottom:10px;}
+#logoutBtn:hover{background:#c82333;}
