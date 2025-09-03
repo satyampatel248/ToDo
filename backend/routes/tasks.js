@@ -30,15 +30,28 @@ router.post("/", (req, res) => {
 
 // Update task (title, due_date, priority, completed, position)
 router.put("/:id", (req, res) => {
-  const { title, due_date, priority, completed, position } = req.body;
-  db.query(
-    "UPDATE tasks SET title=?, due_date=?, priority=?, completed=?, position=? WHERE id=?",
-    [title, due_date, priority, completed, position, req.params.id],
-    (err) => {
-      if (err) return res.status(500).send(err);
-      res.json({ message: "Task updated" });
-    }
-  );
+  const { title, completed, due_date, priority } = req.body;
+
+  // Build dynamic update query
+  let fields = [];
+  let values = [];
+
+  if (title !== undefined) { fields.push("title=?"); values.push(title); }
+  if (completed !== undefined) { fields.push("completed=?"); values.push(completed); }
+  if (due_date !== undefined) { fields.push("due_date=?"); values.push(due_date); }
+  if (priority !== undefined) { fields.push("priority=?"); values.push(priority); }
+
+  if (fields.length === 0) {
+    return res.status(400).json({ error: "No valid fields to update" });
+  }
+
+  values.push(req.params.id);
+
+  const sql = `UPDATE tasks SET ${fields.join(", ")} WHERE id=?`;
+  db.query(sql, values, (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: "Task updated successfully" });
+  });
 });
 
 // Delete task
