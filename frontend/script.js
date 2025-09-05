@@ -1,21 +1,22 @@
-const API_URL = "http://localhost:5000/api";
+const API_URL = "http://localhost:5000/api"; // Backend URL
 let currentUser = null;
+let taskBeingEdited = null;
 
-// --- AUTH ---
+// ------------------- AUTH -------------------
 async function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
-  if (!username || !password) {
-    document.getElementById("authMessage").innerText = "Username & password required";
-    return;
-  }
+  if (!username || !password) return alert("Username and password required!");
+
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })
   });
+
   if (res.ok) {
     currentUser = await res.json();
+    document.getElementById("usernameDisplay").innerText = currentUser.username;
     showTodoContainer();
     fetchTasks();
   } else {
@@ -26,15 +27,14 @@ async function login() {
 async function signup() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
-  if (!username || !password) {
-    document.getElementById("authMessage").innerText = "Username & password required";
-    return;
-  }
+  if (!username || !password) return alert("Username and password required!");
+
   const res = await fetch(`${API_URL}/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })
   });
+
   if (res.ok) {
     document.getElementById("authMessage").innerText = "Signup successful! Login now.";
   } else {
@@ -48,7 +48,20 @@ function logout() {
   document.getElementById("todoContainer").style.display = "none";
 }
 
-// --- TODO FUNCTIONS ---
+// Forgot Password
+async function forgotPassword() {
+  const username = prompt("Enter your username for password reset:");
+  if (!username) return;
+  const res = await fetch(`${API_URL}/auth/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username })
+  });
+  const data = await res.json();
+  alert(data.message + "\nUse Reset Password function to update.");
+}
+
+// ------------------- TODO FUNCTIONS -------------------
 async function fetchTasks() {
   const res = await fetch(`${API_URL}/tasks/${currentUser.id}`);
   const tasks = await res.json();
@@ -58,35 +71,78 @@ async function fetchTasks() {
 async function fetchCompletedTasks() {
   const res = await fetch(`${API_URL}/tasks/${currentUser.id}`);
   const tasks = await res.json();
-  renderTasks(tasks.filter(t => t.completed));
+  const completed = tasks.filter(t => t.completed);
+  renderTasks(completed);
 }
 
 async function addTask() {
   const title = document.getElementById("taskTitle").value.trim();
   const due_date = document.getElementById("taskDue").value;
   const priority = document.getElementById("taskPriority").value;
-  if (!title) return alert("Task title required");
+  if (!title) return alert("Task title required!");
+
   await fetch(`${API_URL}/tasks`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: currentUser.id, title, due_date, priority })
   });
+
   document.getElementById("taskTitle").value = "";
+  document.getElementById("taskDue").value = "";
   toggleAddTaskMenu();
   fetchTasks();
 }
 
-async function updateTask(taskId, currentTitle) {
-  const newTitle = prompt("Edit title:", currentTitle);
-  if (!newTitle) return;
-  await fetch(`${API_URL}/tasks/${taskId}`, {
+// ------------------- EDIT TASK -------------------
+function formatDateForInput(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`; // for <input type="date">
+}
+
+function formatDateDisplay(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${dd}-${mm}-${yyyy}`;
+}
+
+function openEditTaskModal(task) {
+  taskBeingEdited = task;
+  document.getElementById("editTaskTitle").value = task.title;
+  document.getElementById("editTaskDue").value = formatDateForInput(task.due_date);
+  document.getElementById("editTaskPriority").value = task.priority || "Medium";
+  document.getElementById("editTaskContainer").style.display = "flex";
+}
+
+function closeEditTaskModal() {
+  document.getElementById("editTaskContainer").style.display = "none";
+  taskBeingEdited = null;
+}
+
+async function saveEditedTask() {
+  if (!taskBeingEdited) return;
+  const updatedTitle = document.getElementById("editTaskTitle").value.trim();
+  const updatedDue = document.getElementById("editTaskDue").value;
+  const updatedPriority = document.getElementById("editTaskPriority").value;
+  if (!updatedTitle) return alert("Task title required!");
+
+  await fetch(`${API_URL}/tasks/${taskBeingEdited.id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title: newTitle })
+    body: JSON.stringify({ title: updatedTitle, due_date: updatedDue, priority: updatedPriority })
   });
+
+  closeEditTaskModal();
   fetchTasks();
 }
 
+// ------------------- TOGGLE COMPLETE -------------------
 async function toggleComplete(taskId, completed) {
   await fetch(`${API_URL}/tasks/${taskId}`, {
     method: "PUT",
@@ -102,7 +158,7 @@ async function deleteTask(id) {
   fetchTasks();
 }
 
-// --- DRAG & DROP ---
+// ------------------- DRAG & DROP -------------------
 let draggedItem = null;
 function dragStart(e) { draggedItem = e.target; }
 function dragOver(e) { e.preventDefault(); }
@@ -127,7 +183,7 @@ async function saveOrder() {
   }
 }
 
-// --- RENDER TASKS ---
+// ------------------- RENDER TASKS -------------------
 function renderTasks(tasks) {
   const list = document.getElementById("taskList");
   list.innerHTML = "";
@@ -139,10 +195,10 @@ function renderTasks(tasks) {
     li.className = task.completed ? "completed" : "";
 
     li.innerHTML = `
-      <span><strong>${task.title}</strong> [${task.priority}] <em>${task.due_date || ""}</em></span>
+      <span><strong>${task.title}</strong> [${task.priority}] <em>${task.due_date ? formatDateDisplay(task.due_date) : ""}</em></span>
       <div>
         <button onclick="toggleComplete(${task.id}, ${!task.completed})">✔</button>
-        <button onclick="updateTask(${task.id}, '${task.title.replace(/'/g, "\\'")}')">✏️</button>
+        <button onclick='openEditTaskModal(${JSON.stringify(task)})'>✏️</button>
         <button onclick="deleteTask(${task.id})">🗑</button>
       </div>
     `;
@@ -155,57 +211,18 @@ function renderTasks(tasks) {
   });
 }
 
-// --- SHOW TODO AFTER LOGIN ---
+// ------------------- UI TOGGLES -------------------
 function showTodoContainer() {
   document.getElementById("authContainer").style.display = "none";
-  document.getElementById("todoContainer").style.display = "flex";
-  document.getElementById("usernameDisplay").innerText = currentUser.username;
+  document.getElementById("todoContainer").style.display = "block";
 }
 
-// --- ADD TASK MODULE TOGGLE ---
 function toggleAddTaskMenu() {
-  const container = document.getElementById("addTaskContainer");
-  container.style.display = container.style.display === "flex" ? "none" : "flex";
+  const addTask = document.getElementById("addTaskContainer");
+  addTask.style.display = addTask.style.display === "flex" ? "none" : "flex";
 }
 
 function toggleUserDropdown() {
   const dropdown = document.getElementById("userDropdown");
   dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
-}
-
-// Optional: hide dropdown when clicking outside
-window.addEventListener("click", function(e) {
-  const dropdown = document.getElementById("userDropdown");
-  const button = document.getElementById("usernameDisplay");
-  if (!button.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.style.display = "none";
-  }
-});
-
-async function forgotPassword() {
-  const username = prompt("Enter your username to reset password:");
-  if (!username) return;
-
-  const res = await fetch(`${API_URL}/auth/forgot-password`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username })
-  });
-
-  if (res.ok) {
-    const data = await res.json();
-    const newPassword = prompt(`Enter new password for user "${username}":`);
-    if (!newPassword) return;
-
-    const resetRes = await fetch(`${API_URL}/auth/reset-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: data.userId, newPassword })
-    });
-
-    if (resetRes.ok) alert("Password reset successfully! Please login.");
-    else alert(await resetRes.text());
-  } else {
-    alert(await res.text());
-  }
 }

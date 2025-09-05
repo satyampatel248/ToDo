@@ -170,19 +170,125 @@ body {
 
 .floating-btn:hover { background:#004d40; transform:scale(1.1); }
 
-/* ADD TASK MODULE */
+/* ADD TASK MODULE - CENTERED MODAL */
 .add-task-container {
-  display:none; flex-direction:column; gap:10px;
-  position:fixed; bottom:100px; left:30px; background:white; padding:20px;
-  border-radius:12px; box-shadow:0 6px 15px rgba(0,0,0,0.3); z-index:1000;
+  display: none; /* hidden by default */
+  flex-direction: column;
+  gap: 20px; 
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* center both vertically and horizontally */
+  width: 400px; 
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
 }
 
-.add-task-container input, .add-task-container select, .add-task-container button {
-  padding:10px; font-size:14px; border-radius:6px; border:1px solid #ccc;
+/* Input fields & select */
+.add-task-container input,
+.add-task-container select {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
+/* Save button */
 .add-task-container button {
-  background:#00796b; color:white; border:none; cursor:pointer; transition:0.3s;
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  background: #00796b;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.add-task-container button:hover { background:#004d40; }
+.add-task-container button:hover {
+  background: #004d40;
+}
+
+/* Close button for Add Task modal */
+.add-task-container .close-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+/* macOS-style Close Button */
+.add-task-container .mac-close-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 18px;
+  height: 18px;
+  background: #ff5f56; /* mac red button */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+/* Black X inside the circle */
+.add-task-container .mac-close-btn::after {
+  content: '×';
+  font-size: 12px;
+  color: black;
+  font-weight: bold;
+}
+
+/* Hover effect */
+.add-task-container .mac-close-btn:hover {
+  background: #ff0000; /* brighter red on hover */
+  transform: scale(1.1);
+}
+
+/* Close button top-left, red on hover */
+.add-task-container .close-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 18px;
+  height: 18px;
+  background: #ff5f56; /* mac red button */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+.add-task-container .close-btn::after {
+  content: '×';
+  font-size: 12px;
+  color: black;
+  font-weight: bold;
+}
+
+.add-task-container .close-btn:hover {
+  background: #ff0000; /* brighter red on hover */
+  transform: scale(1.1);
+}
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}

@@ -47,20 +47,34 @@
   <!-- Floating Add Task Button -->
   <button id="addTaskBtn" class="floating-btn" onclick="toggleAddTaskMenu()">✏️</button>
 
-  <!-- Add Task Module -->
-  <div id="addTaskContainer" class="add-task-container" style="display:none;">
-    <input type="text" id="taskTitle" placeholder="Task title">
-    <input type="date" id="taskDue">
-    <select id="taskPriority">
-      <option value="Low">Low</option>
-      <option value="Medium" selected>Medium</option>
-      <option value="High">High</option>
-    </select>
-    <button onclick="addTask()">Save Task</button>
-  </div>
+ <!-- Add Task Module -->
+<div id="addTaskContainer" class="add-task-container" style="display:none;">
 
+  <!-- Close Button (macOS style) -->
+  <div class="mac-close-btn" onclick="toggleAddTaskMenu()"></div>
+
+  <input type="text" id="taskTitle" placeholder="Task title">
+  <input type="date" id="taskDue">
+  <select id="taskPriority">
+    <option value="Low">Low</option>
+    <option value="Medium" selected>Medium</option>
+    <option value="High">High</option>
+  </select>
+  <button onclick="addTask()">Save Task</button>
 </div>
 
+<!-- Edit Task Module -->
+<div id="editTaskContainer" class="add-task-container" style="display:none;">
+  <span class="close-btn" onclick="closeEditTaskModal()"></span>
+  <input type="text" id="editTaskTitle" placeholder="Task title">
+  <input type="date" id="editTaskDue">
+  <select id="editTaskPriority">
+    <option value="Low">Low</option>
+    <option value="Medium" selected>Medium</option>
+    <option value="High">High</option>
+  </select>
+  <button onclick="saveEditedTask()">Save Task</button>
+</div>
 <script src="script.js"></script>
 </body>
 </html>
