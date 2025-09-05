@@ -1,11 +1,15 @@
-const API_URL = "http://localhost:5000/api";  // ✅ make it absolute for frontend
-
+const API_URL = "http://localhost:5000/api"; // ✅ absolute URL for frontend
 let currentUser = null;
 
 // --- AUTH ---
 async function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  if (!username || !password) {
+    document.getElementById("authMessage").innerText = "Username and password are required!";
+    return;
+  }
+
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -22,8 +26,13 @@ async function login() {
 }
 
 async function signup() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  if (!username || !password) {
+    document.getElementById("authMessage").innerText = "Username and password are required!";
+    return;
+  }
+
   const res = await fetch(`${API_URL}/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -43,6 +52,52 @@ function logout() {
   document.getElementById("todoContainer").style.display = "none";
 }
 
+// --- FORGOT / RESET PASSWORD ---
+function showForgotPassword() {
+  document.getElementById("authContainer").style.display = "none";
+  document.getElementById("forgotPasswordContainer").style.display = "block";
+}
+
+function showLogin() {
+  document.getElementById("forgotPasswordContainer").style.display = "none";
+  document.getElementById("authContainer").style.display = "block";
+}
+
+async function resetPassword() {
+  const username = document.getElementById("fpUsername").value.trim();
+  const newPassword = document.getElementById("fpNewPassword").value.trim();
+  if (!username || !newPassword) {
+    document.getElementById("fpMessage").innerText = "Please fill all fields!";
+    return;
+  }
+
+  const res1 = await fetch(`${API_URL}/auth/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username })
+  });
+
+  if (!res1.ok) {
+    document.getElementById("fpMessage").innerText = await res1.text();
+    return;
+  }
+
+  const data = await res1.json();
+  const userId = data.userId;
+
+  const res2 = await fetch(`${API_URL}/auth/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId, newPassword })
+  });
+
+  if (res2.ok) {
+    document.getElementById("fpMessage").innerText = "Password reset successfully! Login now.";
+  } else {
+    document.getElementById("fpMessage").innerText = await res2.text();
+  }
+}
+
 // --- TODO FUNCTIONS ---
 async function fetchTasks() {
   const res = await fetch(`${API_URL}/tasks/${currentUser.id}`);
@@ -51,10 +106,9 @@ async function fetchTasks() {
 }
 
 async function addTask() {
-  const title = document.getElementById("taskTitle").value;
+  const title = document.getElementById("taskTitle").value.trim();
   const due_date = document.getElementById("taskDue").value;
   const priority = document.getElementById("taskPriority").value;
-
   if (!title) return alert("Task title required!");
 
   await fetch(`${API_URL}/tasks`, {
@@ -86,7 +140,6 @@ async function toggleComplete(taskId, completed) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ completed })
   });
-
   fetchTasks();
 }
 

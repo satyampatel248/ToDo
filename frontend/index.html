@@ -5,23 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Advanced ToDo App</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="app">
-  <h1>✅ ToDo App</h1>
+  <h1>✅ Advanced ToDo App</h1>
 
-  <div id="authContainer">
+  <!-- AUTH -->
+  <div id="authContainer" class="card auth-card">
     <h2>Login / Signup</h2>
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <button onclick="signup()">Signup</button>
-    <p id="authMessage"></p>
+    <div class="btn-group">
+      <button class="btn primary" onclick="login()">Login</button>
+      <button class="btn secondary" onclick="signup()">Signup</button>
+    </div>
+    <p><a href="#" onclick="showForgotPassword()">Forgot Password?</a></p>
+    <p id="authMessage" class="auth-message"></p>
   </div>
 
+  <!-- FORGOT PASSWORD -->
+  <div id="forgotPasswordContainer" class="card auth-card" style="display:none;">
+    <h3>Reset Password</h3>
+    <input type="text" id="fpUsername" placeholder="Username">
+    <input type="password" id="fpNewPassword" placeholder="New Password">
+    <button class="btn primary" onclick="resetPassword()">Reset Password</button>
+    <p id="fpMessage" class="auth-message"></p>
+    <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+  </div>
+
+  <!-- TODO -->
   <div id="todoContainer" style="display:none;">
-    <button id="logoutBtn" onclick="logout()">Logout</button>
-    <div class="task-input">
+    <div class="top-bar">
+      <h2>Your Tasks</h2>
+      <button id="logoutBtn" class="btn logout" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="card task-input">
       <input type="text" id="taskTitle" placeholder="Task title">
       <input type="date" id="taskDue">
       <select id="taskPriority">
@@ -29,10 +49,10 @@
         <option value="Medium" selected>Medium</option>
         <option value="High">High</option>
       </select>
-      <button onclick="addTask()">Add Task</button>
+      <button class="btn primary" onclick="addTask()">Add Task</button>
     </div>
 
-    <ul id="taskList"></ul>
+    <ul id="taskList" class="task-list"></ul>
   </div>
 </div>
 

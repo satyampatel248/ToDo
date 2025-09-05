@@ -1,11 +1,157 @@
-body { font-family: Arial, sans-serif; background:#f4f6f8; margin:0; padding:0; }
-.app { max-width:600px; margin:40px auto; padding:20px; background:white; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
-h1,h2{text-align:center;}
-input,select,button{padding:8px;font-size:14px;margin:5px;}
-button{cursor:pointer;border:none;border-radius:5px;}
-#taskList{list-style:none;padding:0;}
-#taskList li{background:#f9f9f9;margin-bottom:10px;padding:10px;border-left:5px solid #28a745;display:flex;justify-content:space-between;align-items:center;border-radius:6px;cursor:grab;}
-#taskList li.completed{text-decoration:line-through;opacity:0.6;}
-.task-input{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:15px;}
-#logoutBtn{background:#dc3545;color:white;margin-bottom:10px;}
-#logoutBtn:hover{background:#c82333;}
+/* --- GENERAL --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  background: linear-gradient(120deg, #74ABE2, #5563DE);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  padding: 20px;
+  color: #333;
+}
+
+/* --- HEADINGS --- */
+h1 {
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+}
+
+h2 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* --- CARDS --- */
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  margin-bottom: 20px;
+}
+
+/* --- INPUTS --- */
+input[type="text"], input[type="password"], input[type="date"], select {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* --- BUTTONS --- */
+.btn {
+  padding: 10px 20px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn.primary {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: #fff;
+}
+
+.btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+.btn.secondary {
+  background: #eee;
+  color: #333;
+}
+
+.btn.secondary:hover {
+  background: #ddd;
+}
+
+.btn.logout {
+  background: #ff4b5c;
+  color: #fff;
+}
+
+.btn.logout:hover {
+  background: #e43b4a;
+}
+
+/* --- AUTH SECTION --- */
+.auth-card input {
+  width: 80%;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* --- TODO SECTION --- */
+.todo-container .top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.task-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-input select,
+.task-input input {
+  margin-bottom: 10px;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+}
+
+.task-list li {
+  background: #f6f6f6;
+  padding: 12px 15px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: grab;
+  transition: all 0.2s;
+}
+
+.task-list li.completed {
+  background: #d4edda;
+  text-decoration: line-through;
+  color: #555;
+}
+
+.task-list li div button {
+  margin-left: 5px;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.auth-message {
+  margin-top: 10px;
+  color: red;
+  font-weight: 500;
+}
