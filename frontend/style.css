@@ -287,6 +287,11 @@ body {
   background: #ff0000; /* brighter red on hover */
   transform: scale(1.1);
 }
+/* Priority-based coloring */
+.task-list li.high { border-left: 5px solid red; }
+.task-list li.medium { border-left: 5px solid orange; }
+.task-list li.low { border-left: 5px solid blue; }
+.task-list li.completed { border-left: 5px solid green; color: #2e7d32; opacity: 0.8; text-decoration: line-through; }
 /* Fade in animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translate(-50%, -60%); }

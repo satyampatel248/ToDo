@@ -65,14 +65,15 @@ async function forgotPassword() {
 async function fetchTasks() {
   const res = await fetch(`${API_URL}/tasks/${currentUser.id}`);
   const tasks = await res.json();
-  renderTasks(tasks);
+  const incomplete = tasks.filter(t => !t.completed); // show only incomplete on dashboard
+  renderTasks(incomplete);
 }
 
 async function fetchCompletedTasks() {
   const res = await fetch(`${API_URL}/tasks/${currentUser.id}`);
   const tasks = await res.json();
   const completed = tasks.filter(t => t.completed);
-  renderTasks(completed);
+  renderCompletedTasks(completed);
 }
 
 async function addTask() {
@@ -192,7 +193,12 @@ function renderTasks(tasks) {
     const li = document.createElement("li");
     li.draggable = true;
     li.dataset.id = task.id;
-    li.className = task.completed ? "completed" : "";
+
+    // Priority coloring
+    if(task.completed) li.className = "completed";
+    else if(task.priority === "High") li.className = "high";
+    else if(task.priority === "Medium") li.className = "medium";
+    else li.className = "low";
 
     li.innerHTML = `
       <span><strong>${task.title}</strong> [${task.priority}] <em>${task.due_date ? formatDateDisplay(task.due_date) : ""}</em></span>
@@ -207,6 +213,25 @@ function renderTasks(tasks) {
     li.addEventListener("dragover", dragOver);
     li.addEventListener("drop", drop);
 
+    list.appendChild(li);
+  });
+}
+
+function renderCompletedTasks(tasks) {
+  const list = document.getElementById("taskList");
+  list.innerHTML = "";
+  tasks.forEach(task => {
+    const li = document.createElement("li");
+    li.dataset.id = task.id;
+    li.className = "completed";
+    li.innerHTML = `
+      <span><strong>${task.title}</strong> [${task.priority}] <em>${task.due_date ? formatDateDisplay(task.due_date) : ""}</em></span>
+      <div>
+        <button onclick="toggleComplete(${task.id}, ${!task.completed})">✔</button>
+        <button onclick='openEditTaskModal(${JSON.stringify(task)})'>✏️</button>
+        <button onclick="deleteTask(${task.id})">🗑</button>
+      </div>
+    `;
     list.appendChild(li);
   });
 }
