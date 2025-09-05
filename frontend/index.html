@@ -1,59 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced ToDo App</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern ToDo App</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
-  <h1>✅ Advanced ToDo App</h1>
 
-  <!-- AUTH -->
-  <div id="authContainer" class="card auth-card">
-    <h2>Login / Signup</h2>
+<!-- AUTH CARD (Visible before login) -->
+<div id="authContainer" class="auth-container">
+  <div class="auth-card">
+    <h2>Welcome to ToDo App</h2>
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
-    <div class="btn-group">
-      <button class="btn primary" onclick="login()">Login</button>
-      <button class="btn secondary" onclick="signup()">Signup</button>
+    <div class="auth-btns">
+      <button onclick="login()">Login</button>
+      <button onclick="signup()">Signup</button>
     </div>
-    <p><a href="#" onclick="showForgotPassword()">Forgot Password?</a></p>
-    <p id="authMessage" class="auth-message"></p>
+    <p class="forgot-password">
+      <a href="#" onclick="forgotPassword()">Forgot Password?</a>
+    </p>
+    <p id="authMessage"></p>
+  </div>
+</div>
+
+<!-- TODO CONTAINER (Visible after login) -->
+<div id="todoContainer" class="todo-container" style="display:none;">
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="app-title">✅ ToDo App</div>
+    <div class="user-menu">
+      <button id="usernameDisplay" onclick="toggleUserDropdown()">User</button>
+      <div id="userDropdown" class="dropdown">
+        <button onclick="fetchTasks()">All Tasks</button>
+        <button onclick="fetchCompletedTasks()">Completed Tasks</button>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
   </div>
 
-  <!-- FORGOT PASSWORD -->
-  <div id="forgotPasswordContainer" class="card auth-card" style="display:none;">
-    <h3>Reset Password</h3>
-    <input type="text" id="fpUsername" placeholder="Username">
-    <input type="password" id="fpNewPassword" placeholder="New Password">
-    <button class="btn primary" onclick="resetPassword()">Reset Password</button>
-    <p id="fpMessage" class="auth-message"></p>
-    <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+  <!-- Task List -->
+  <ul id="taskList" class="task-list"></ul>
+
+  <!-- Floating Add Task Button -->
+  <button id="addTaskBtn" class="floating-btn" onclick="toggleAddTaskMenu()">✏️</button>
+
+  <!-- Add Task Module -->
+  <div id="addTaskContainer" class="add-task-container" style="display:none;">
+    <input type="text" id="taskTitle" placeholder="Task title">
+    <input type="date" id="taskDue">
+    <select id="taskPriority">
+      <option value="Low">Low</option>
+      <option value="Medium" selected>Medium</option>
+      <option value="High">High</option>
+    </select>
+    <button onclick="addTask()">Save Task</button>
   </div>
 
-  <!-- TODO -->
-  <div id="todoContainer" style="display:none;">
-    <div class="top-bar">
-      <h2>Your Tasks</h2>
-      <button id="logoutBtn" class="btn logout" onclick="logout()">Logout</button>
-    </div>
-
-    <div class="card task-input">
-      <input type="text" id="taskTitle" placeholder="Task title">
-      <input type="date" id="taskDue">
-      <select id="taskPriority">
-        <option value="Low">Low</option>
-        <option value="Medium" selected>Medium</option>
-        <option value="High">High</option>
-      </select>
-      <button class="btn primary" onclick="addTask()">Add Task</button>
-    </div>
-
-    <ul id="taskList" class="task-list"></ul>
-  </div>
 </div>
 
 <script src="script.js"></script>
