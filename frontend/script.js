@@ -2,6 +2,17 @@ const API_URL = "http://localhost:5000/api"; // Backend URL
 let currentUser = null;
 let taskBeingEdited = null;
 
+// ------------------- AUTO LOGIN -------------------
+window.addEventListener("DOMContentLoaded", () => {
+  const savedUser = localStorage.getItem("currentUser");
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+    document.getElementById("usernameDisplay").innerText = currentUser.username;
+    showTodoContainer();
+    fetchTasks();
+  }
+});
+
 // ------------------- AUTH -------------------
 async function login() {
   const username = document.getElementById("username").value.trim();
@@ -16,6 +27,7 @@ async function login() {
 
   if (res.ok) {
     currentUser = await res.json();
+    localStorage.setItem("currentUser", JSON.stringify(currentUser)); // <- Save login persistently
     document.getElementById("usernameDisplay").innerText = currentUser.username;
     showTodoContainer();
     fetchTasks();
@@ -44,6 +56,7 @@ async function signup() {
 
 function logout() {
   currentUser = null;
+  localStorage.removeItem("currentUser"); // <- Clear cache on logout
   document.getElementById("authContainer").style.display = "flex";
   document.getElementById("todoContainer").style.display = "none";
 }
@@ -101,7 +114,7 @@ function formatDateForInput(dateStr) {
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`; // for <input type="date">
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 function formatDateDisplay(dateStr) {
