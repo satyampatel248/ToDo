@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<!-- AUTH CARD (Visible before login) -->
+<!-- AUTH CARD (Login / Signup) -->
 <div id="authContainer" class="auth-container">
   <div class="auth-card">
     <h2>Welcome to ToDo App</h2>
@@ -23,6 +23,29 @@
     </p>
     <p id="authMessage"></p>
   </div>
+</div>
+
+<!-- FORGOT PASSWORD FORM (Hidden by default) -->
+<!-- FORGOT PASSWORD FORM (Hidden by default) -->
+<div id="forgotPasswordContainer" style="display:none; text-align:center; margin-top:40px;">
+    <h2>Forgot Password</h2>
+
+    <p id="fpMessage"></p>
+
+    <!-- STEP 1: Enter Username -->
+    <div id="fpStep1">
+        <input type="text" id="fpUsername" placeholder="Enter Username"><br><br>
+        <button onclick="submitForgotUsername()">Next</button><br><br>
+    </div>
+
+    <!-- STEP 2: Enter New Password -->
+    <div id="fpStep2" style="display:none;">
+        <input type="password" id="fpNewPassword" placeholder="New Password"><br><br>
+        <input type="password" id="fpConfirmPassword" placeholder="Confirm Password"><br><br>
+        <button onclick="submitNewPassword()">Reset Password</button><br><br>
+    </div>
+
+    <a href="#" onclick="showLogin()">Back to Login</a>
 </div>
 
 <!-- TODO CONTAINER (Visible after login) -->
@@ -50,7 +73,6 @@
  <!-- Add Task Module -->
 <div id="addTaskContainer" class="add-task-container" style="display:none;">
 
-  <!-- Close Button (macOS style) -->
   <div class="mac-close-btn" onclick="toggleAddTaskMenu()"></div>
 
   <input type="text" id="taskTitle" placeholder="Task title">
@@ -75,6 +97,7 @@
   </select>
   <button onclick="saveEditedTask()">Save Task</button>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>
